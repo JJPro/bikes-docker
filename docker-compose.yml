@@ -1,0 +1,40 @@
+version: '3'
+
+services:
+  wordpress:
+    build:
+      context: .
+    container_name: bikes
+    ports:
+      - 8080:8080
+    restart: unless-stopped
+    volumes: # UID: 1001
+      - ./post-install.sh:/docker-entrypoint-init.d/post-install.sh
+    depends_on:
+      - mariadb
+    environment:
+      ### Common
+      - WORDPRESS_DATABASE_HOST=mariadb
+      - WORDPRESS_DATABASE_PORT_NUMBER=3306
+      - WORDPRESS_DATABASE_USER=bn_wordpress
+      - WORDPRESS_DATABASE_PASSWORD=bn_wordpress
+      - WORDPRESS_DATABASE_NAME=bitnami_wordpress
+      - PHP_EXPOSE_PHP=no
+      - PHP_MAX_EXECUTION_TIME=60 # 60s
+      - PHP_POST_MAX_SIZE=100M
+      - PHP_UPLOAD_MAX_FILESIZE=50M
+      
+      ### Customize
+      - WORDPRESS_BLOG_NAME=Blog
+      - WORDPRESS_USERNAME=user
+      - WORDPRESS_EMAIL=user@example.com
+      - WORDPRESS_PASSWORD=bitnami
+
+  mariadb:
+    image: bitnami/mariadb:10.6
+    restart: unless-stopped
+    environment:
+      - MARIADB_PASSWORD=bn_wordpress
+      - MARIADB_USER=bn_wordpress
+      - MARIADB_DATABASE=bitnami_wordpress
+      - MARIADB_ROOT_PASSWORD=G8W4A5%
