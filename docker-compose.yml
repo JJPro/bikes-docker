@@ -2,8 +2,7 @@ version: '3'
 
 services:
   wordpress:
-    build:
-      context: .
+    image: jjpro/bikes-demo:latest
     container_name: bikes
     ports:
       - 8080:8080
